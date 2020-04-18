@@ -54,6 +54,40 @@ def add_to_visited(current_room_id, exits):
         visited[current_room_id][e] = None
 
 
+def dft_maze_traversal(current_room):
+    current_room = player.current_room.id
+    current_exits = player.current_room.get_exits()
+    prev_room = None
+    s = Stack()
+
+    s.push([None, current_room, prev_room, current_exits])
+    while len(visited) < 499:
+        curr_node = s.pop()
+        direction = curr_node[0]
+        current_room = curr_node[1]
+        prev_room = curr_node[2]
+        curr_exits = curr_node[3]
+        if current_room not in visited:
+            add_to_visited(current_room, curr_exits)
+        if direction is not None:
+            visited[current_room][return_opposites(direction)] = prev_room
+        if prev_room is not None:
+            visited[prev_room][direction] = current_room
+        for d in visited[current_room].keys():
+
+            if visited[current_room][d] is None:
+                s.push(curr_node)
+                prev = player.current_room.id
+                move(d)
+                s.push([d, player.current_room.id, prev,
+                        player.current_room.get_exits()])
+                break
+        if current_room == player.current_room.id:
+            move(return_opposites(direction))
+
+
+dft_maze_traversal(player.current_room.id)
+
 # TRAVERSAL TEST
 visited_rooms = set()
 player.current_room = world.starting_room
